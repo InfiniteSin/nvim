@@ -10,7 +10,7 @@ NeoVIM Configs
 **LSP Client Manage**: [Mason Package List](https://mason-registry.dev/registry/list)
 - download
 
-**Abstract Syntax Tree**: [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+**Abstract Syntax Tree Parsers/Queries Download**: [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 - parser
 - query
 requirements
@@ -29,6 +29,10 @@ requirements
 optionals
 - fd
 - ripgrep(rg)
+
+**Utils Collections**: [mini.nvim](https://github.com/nvim-mini/mini.nvim)
+- surroundings
+- pairs
 
 ## Language Server Protocal
 
@@ -71,4 +75,6 @@ optionals
 - [Advent of nvim - by TJdevries ](https://github.com/tjdevries/advent-of-nvim)
 - [Minimals Neovim config - by SylvanFranklin](https://github.com/SylvanFranklin/.config/tree/main/nvim)
 - [Neovim config with less than 10 plugins - by radleylewis](https://github.com/radleylewis/nvim-lite)
+- [MINI MAX configs](https://github.com/nvim-mini/MiniMax)
 - [Official Doc of tree-sitter](https://tree-sitter.github.io/tree-sitter/index.html)
+- [mini.nvim wiki](https://nvim-mini.org/mini.nvim/#module)
