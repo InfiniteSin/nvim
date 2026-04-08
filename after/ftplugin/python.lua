@@ -4,7 +4,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   callback = function()
     vim.lsp.buf.format({
       async = false,
-      filter = function(c) return c.name == "ruff" end,
+      filter = function(client) return client.name == "ruff" end,
     })
   end,
 })
