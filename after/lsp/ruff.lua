@@ -19,12 +19,23 @@ return {
 
 	  lineLength = 88,
 	
-      -- Enable import organization
-      organizeImports = true,
+		-- Enable import organization
+		organizeImports = true,
 
 	  configuration = {
 			lint = {
-				enable = true,
+				select = {
+				  "E",   -- pycodestyle errors
+				  "W",   -- pycodestyle warnings
+				  "F",   -- pyflakes
+				  "I",   -- isort
+				  "B",   -- flake8-bugbear
+				  "C4",  -- flake8-comprehensions
+				  "UP",  -- pyupgrade
+				},
+				ignore = {
+					"E501",	-- line too long (handled by formatter)
+				},
 			},
 			format = {
 				['quote-style'] = 'single',
