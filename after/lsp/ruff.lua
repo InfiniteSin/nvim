@@ -17,7 +17,7 @@ return {
 		  '/tests/',
 		},
 
-	  lineLength = 100,
+	  lineLength = 88,
 	
       -- Enable import organization
       organizeImports = true,
