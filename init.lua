@@ -276,6 +276,7 @@ vim.pack.add({
 
 vim.api.nvim_create_augroup("PluginInit", { clear = true })
 vim.api.nvim_create_augroup("PluginConfig", { clear = true })
+vim.api.nvim_create_augroup("UserLSPConfig", { clear = true })
 
 vim.api.nvim_create_autocmd("PackChanged", {
     group = "PluginInit",
@@ -379,12 +380,50 @@ vim.api.nvim_create_autocmd("Filetype", {
 
 -- LSP
 vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
+		group = 'UserLSPConfig',
+    callback = function(event)
         vim.opt.signcolumn = "yes:2"
-        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+        local client = assert(vim.lsp.get_client_by_id(event.data.client_id))
+			  local bufnr  = event.buf
+			  
+			  -- Disable Ruff's hover in favor of ty's richer hover
+		    if client and client.name == "ruff" then
+		      client.server_capabilities.hoverProvider = false
+		    end
+			  
+				local map = function(mode, lhs, rhs, desc)
+      		vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+    		end
+		
+		    -- Navigation
+		    map("n", "gd",  vim.lsp.buf.definition,      "Go to Definition")
+		    map("n", "gD",  vim.lsp.buf.declaration,     "Go to Declaration")
+		    map("n", "gri",  vim.lsp.buf.implementation,  "Go to Implementation")
+		    map("n", "grr",  vim.lsp.buf.references,      "References")
+		    map("n", "K",   vim.lsp.buf.hover,           "Hover Documentation")
+		
+		    -- Code actions & Rename
+		    map("n", "gra", vim.lsp.buf.code_action, "Code Action")
+		    map("n", "grn", vim.lsp.buf.rename,      "Rename Symbol")
+
+				-- Diagnostics
+		    -- map("n", "<leader>e", vim.diagnostic.open_float, "Show Diagnostics")
+		    map("n", "[d",        vim.diagnostic.goto_prev,  "Previous Diagnostic")
+		    map("n", "]d",        vim.diagnostic.goto_next,  "Next Diagnostic")
+		    map("n", "<leader>q", vim.diagnostic.setloclist, "Diagnostics List")
+
+		    -- Format with Ruff on demand
+		    map("n", "grf", function()
+		      vim.lsp.buf.format({
+		        async = true,
+		        -- Only let ruff handle formatting
+		        filter = function(c) return c.name == "ruff" end,
+		      })
+		    end, "Format with Ruff")
+			
         if client:supports_method("textDocument/completion") then
-            vim.o.complete = "o,.,w,b,u"
-            vim.lsp.completion.enable(true, client.id, args.buf)
+            vim.o.complete = "o,.,w,b,u,t"
+            vim.lsp.completion.enable(true, client.id, bufnr)
         end
     end,
 })
