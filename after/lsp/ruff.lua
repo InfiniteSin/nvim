@@ -65,6 +65,10 @@ return {
 			},
 			format = {
 				['quote-style'] = 'single',
+				['indent-style'] = 'space',
+				['skip-magic-trailing-comma'] = false,
+				['line-ending'] = 'auto',
+				['docstring-code-format'] = false,
 		    },
 		},
 
