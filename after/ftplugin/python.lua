@@ -8,3 +8,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     })
   end,
 })
+
+-- Diagnostic Display
+vim.diagnostic.config({
+  underline     = true,
+})
