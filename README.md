@@ -3,9 +3,8 @@ NeoVIM Configs
 
 ## Plugins
 
-**Plugin Manage**: [Lazy.Nvim Official Doc](https://lazy.folke.io/)
+**Plugin Manage**: [vim.pack](https://neovim.io/doc/user/pack/#_plugin-manager)
 - download
-- config
 
 **LSP Client Manage**: [Mason Package List](https://mason-registry.dev/registry/list)
 - download
@@ -31,7 +30,9 @@ optionals
 - ripgrep(rg)
 
 **Utils Collections**: [mini.nvim](https://github.com/nvim-mini/mini.nvim)
-- surroundings
+- icons
+- comment
+- surround
 - pairs
 
 ## Language Server Protocal
@@ -60,16 +61,16 @@ optionals
 
 ### Python
 [ty](https://docs.astral.sh/ty/)
-- diagnostic
 - static type check
+
+[ruff](https://docs.astral.sh/ruff/)
+- format
+- diagnostic
 - highlight
 - completion
 - hover
 - refactor
 - code actions
-
-[ruff](https://docs.astral.sh/ruff/)
-- format
 
 # References
 - [Advent of nvim - by TJdevries ](https://github.com/tjdevries/advent-of-nvim)
