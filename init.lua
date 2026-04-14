@@ -15,7 +15,7 @@ vim.opt.cursorline = true
 vim.opt.colorcolumn = "80"
 vim.opt.textwidth = 80
 require("vim._core.ui2").enable({})
-vim.opt.conceallevel = 0
+vim.opt.conceallevel = 1
 vim.opt.concealcursor = ""
 vim.opt.tabline = "%t"
 vim.opt.statusline = "[%n] %<%f argidx:%{argidx()+1}/%{argc()} %h%w%m%r%=%-14.(%l,%c%V%) %P"
@@ -237,6 +237,8 @@ vim.cmd.packadd("nvim.difftool")
 
 -- Third Party Plugins
 vim.pack.add({
+  -- Plenary for useful collection of lua functions
+  "https://github.com/nvim-lua/plenary.nvim",
     -- Treesitter Parsers and Queries download and manage
     {
             src = "https://github.com/nvim-treesitter/nvim-treesitter",
@@ -258,6 +260,8 @@ vim.pack.add({
     "https://github.com/nvim-mini/mini.nvim",
     -- Markdown file support
     "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+    -- Obsidian Integration
+    "https://github.com/epwalsh/obsidian.nvim",
     -- Auto Completion with rich configuration
     "https://github.com/saghen/blink.cmp",
 })
@@ -479,7 +483,25 @@ vim.lsp.enable({
   -- Python
   "ty",
   "ruff",
+  -- Markdown
+  "marksman",
 })
+
+-- Obsidian Integration
+vim.api.nvim_create_autocmd('FileType', {
+  group = 'PluginConfig',
+  pattern = { "*.md" },
+  callback = function()
+    require('plenary')
+    require('render-markdown').setup({})
+    require('obsidian').setup({
+      workspaces = {
+        { name = "work", path = "~/work/worknote" },
+      },
+    })
+  end,
+})
+
 
 -- Utils
 vim.api.nvim_create_autocmd("TextYankPost", {
