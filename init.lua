@@ -15,7 +15,7 @@ vim.opt.cursorline = true
 vim.opt.colorcolumn = "80"
 vim.opt.textwidth = 80
 require("vim._core.ui2").enable({})
-vim.opt.conceallevel = 0
+vim.opt.conceallevel = 1
 vim.opt.concealcursor = ""
 vim.opt.tabline = "%t"
 vim.opt.statusline = "[%n] %<%f argidx:%{argidx()+1}/%{argc()} %h%w%m%r%=%-14.(%l,%c%V%) %P"
@@ -237,6 +237,8 @@ vim.cmd.packadd("nvim.difftool")
 
 -- Third Party Plugins
 vim.pack.add({
+  -- Plenary for useful collection of lua functions
+  "https://github.com/nvim-lua/plenary.nvim",
     -- Treesitter Parsers and Queries download and manage
     {
             src = "https://github.com/nvim-treesitter/nvim-treesitter",
@@ -258,12 +260,10 @@ vim.pack.add({
     "https://github.com/nvim-mini/mini.nvim",
     -- Markdown file support
     "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+    -- Obsidian Integration
+    "https://github.com/epwalsh/obsidian.nvim",
     -- Auto Completion with rich configuration
-    {
-            src = "https://github.com/saghen/blink.cmp",
-            version = "1.*",
-        },
-
+    "https://github.com/saghen/blink.cmp",
 })
 
 
@@ -312,6 +312,9 @@ vim.api.nvim_create_autocmd("PackChanged", {
             end
             -- Treesitter Initial end
             vim.cmd("TSUpdate")
+        end
+        if name == "blink.cmp" and (kind == "install" or kind == "update") then
+            vim.system({ "cargo", "build", "--release" }, { cwd = ev.data.path })
         end
     end,
 })
@@ -396,7 +399,7 @@ require('blink.cmp').setup({
         snippets = {
             preset = "mini_snippets",
         },
-        fuzzy = { implementation = "prefer_rust_with_warning" },
+        fuzzy = { implementation = "prefer_rust" },
 })
 
 -- LSP
@@ -426,10 +429,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
         map("n", "grn", vim.lsp.buf.rename,      "Rename Symbol")
 
         -- Diagnostics
-        -- map("n", "<leader>e", vim.diagnostic.open_float, "Show Diagnostics")
-        map("n", "[d",        vim.diagnostic.jump({count=1}),  "Previous Diagnostic")
-        map("n", "]d",        vim.diagnostic.jump({count=-1}),  "Next Diagnostic")
-        map("n", "<leader>q", vim.diagnostic.setloclist, "Diagnostics List")
+        local diagnostics = vim.diagnostic.get(bufnr)
+        local has_diagnostics = #diagnostics> 0
+        if has_diagnostics then
+          -- map("n", "<leader>e", vim.diagnostic.open_float, "Show Diagnostics")
+          map("n", "[d",        vim.diagnostic.jump({ count=1, float=true }),  "Previous Diagnostic")
+          map("n", "]d",        vim.diagnostic.jump({count=-1, float=true }),  "Next Diagnostic")
+          map("n", "<leader>q", vim.diagnostic.setloclist, "Diagnostics List")
+        end
 
         -- Format with Ruff on demand
         map("n", "grf", function()
@@ -474,13 +481,41 @@ vim.lsp.config("*",
   capabilities = capabilities,
 })
 
+-- Solve markdown.mdx filetype issues
+vim.filetype.add({
+  extension = {
+    mdx = 'markdown'
+  },
+})
+vim.lsp.config('marksman', {
+  filetypes = { 'markdown' },
+})
+
 vim.lsp.enable({
   -- Lua
   "lua_ls",
   -- Python
   "ty",
   "ruff",
+  -- Markdown
+  "marksman",
 })
+
+-- Obsidian Integration
+vim.api.nvim_create_autocmd('FileType', {
+  group = 'PluginConfig',
+  pattern = { "*.md" },
+  callback = function()
+    require('plenary')
+    require('render-markdown').setup({})
+    require('obsidian').setup({
+      workspaces = {
+        { name = "work", path = "~/work/worknote" },
+      },
+    })
+  end,
+})
+
 
 -- Utils
 vim.api.nvim_create_autocmd("TextYankPost", {
