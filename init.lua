@@ -429,10 +429,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
         map("n", "grn", vim.lsp.buf.rename,      "Rename Symbol")
 
         -- Diagnostics
-        -- map("n", "<leader>e", vim.diagnostic.open_float, "Show Diagnostics")
-        map("n", "[d",        vim.diagnostic.jump({count=1}),  "Previous Diagnostic")
-        map("n", "]d",        vim.diagnostic.jump({count=-1}),  "Next Diagnostic")
-        map("n", "<leader>q", vim.diagnostic.setloclist, "Diagnostics List")
+        local diagnostics = vim.diagnostic.get(bufnr)
+        local has_diagnostics = #diagnostics> 0
+        if has_diagnostics then
+          -- map("n", "<leader>e", vim.diagnostic.open_float, "Show Diagnostics")
+          map("n", "[d",        vim.diagnostic.jump({ count=1, float=true }),  "Previous Diagnostic")
+          map("n", "]d",        vim.diagnostic.jump({count=-1, float=true }),  "Next Diagnostic")
+          map("n", "<leader>q", vim.diagnostic.setloclist, "Diagnostics List")
+        end
 
         -- Format with Ruff on demand
         map("n", "grf", function()
@@ -475,6 +479,16 @@ local capabilities = require("blink.cmp").get_lsp_capabilities()
 vim.lsp.config("*",
 {
   capabilities = capabilities,
+})
+
+-- Solve markdown.mdx filetype issues
+vim.filetype.add({
+  extension = {
+    mdx = 'markdown'
+  },
+})
+vim.lsp.config('marksman', {
+  filetypes = { 'markdown' },
 })
 
 vim.lsp.enable({
