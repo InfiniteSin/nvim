@@ -221,12 +221,12 @@ set("n", "<leader>a5", function()
 end,
 { desc = "Arglist Go To Number 5 pos" })
 
-set('n', "<Esc>", "<CMD>nohl<CR>", { noremap = true, desc = "cancel highlight" })
-set('n', 'G', 'Gzz', { noremap = true, desc = 'Go Bottom and Centered' })
-set('n', 'n', 'nzz', { noremap = true, desc = 'Search Next and Centered' })
-set('n', 'N', 'Nzz', { noremap = true, desc = 'Search Prev and Centered' })
-set('v', '<', '<gv', { noremap = true, desc = 'Outdent and Keep Visual Selection' })
-set('v', '>', '>gv', { noremap = true, desc = 'Indent and Keep Visual Selection' })
+set("n", "<Esc>", "<CMD>nohl<CR>", { noremap = true, desc = "cancel highlight" })
+set("n", "G", "Gzz", { noremap = true, desc = "Go Bottom and Centered" })
+set("n", "n", "nzz", { noremap = true, desc = "Search Next and Centered" })
+set("n", "N", "Nzz", { noremap = true, desc = "Search Prev and Centered" })
+set("v", "<", "<gv", { noremap = true, desc = "Outdent and Keep Visual Selection" })
+set("v", ">", ">gv", { noremap = true, desc = "Indent and Keep Visual Selection" })
 
 -- Plugins
 -- Builtin Plugins
@@ -319,18 +319,18 @@ vim.api.nvim_create_autocmd("PackChanged", {
     end,
 })
 
-require('nvim-treesitter').setup({
+require("nvim-treesitter").setup({
     highlight = { enable = true },
     fold = {
         enable = true,
         foldopen = "foldopen",
     },
 })
-require('mini.icons').setup({})
-require('mini.comment').setup({})
-require('mini.surround').setup({})
-require('mini.pairs').setup({})
-require('mini.snippets').setup({})
+require("mini.icons").setup({})
+require("mini.comment").setup({})
+require("mini.surround").setup({})
+require("mini.pairs").setup({})
+require("mini.snippets").setup({})
 
 require("oil").setup({
     default_file_explorer = false,
@@ -378,7 +378,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 
 -- Auto Completions
-require('blink.cmp').setup({
+require("blink.cmp").setup({
         keymap = { preset = "default" },
         -- appearance = { nerd_font_variant = "mono" },
         sources = {
@@ -404,12 +404,12 @@ require('blink.cmp').setup({
 
 -- LSP
 vim.api.nvim_create_autocmd("LspAttach", {
-    group = 'UserLSPConfig',
+    group = "UserLSPConfig",
     callback = function(event)
         vim.opt.signcolumn = "yes:2"
         local client = assert(vim.lsp.get_client_by_id(event.data.client_id))
         local bufnr  = event.buf
-        -- Disable Ruff's hover in favor of ty's richer hover
+        -- Disable Ruff"s hover in favor of ty"s richer hover
         if client and client.name == "ruff" then
             client.server_capabilities.hoverProvider = false
         end
@@ -484,11 +484,11 @@ vim.lsp.config("*",
 -- Solve markdown.mdx filetype issues
 vim.filetype.add({
   extension = {
-    mdx = 'markdown'
+    mdx = "markdown"
   },
 })
-vim.lsp.config('marksman', {
-  filetypes = { 'markdown' },
+vim.lsp.config("marksman", {
+  filetypes = { "markdown" },
 })
 
 vim.lsp.enable({
@@ -499,16 +499,17 @@ vim.lsp.enable({
   "ruff",
   -- Markdown
   "marksman",
+  "rumdl",
 })
 
 -- Obsidian Integration
-vim.api.nvim_create_autocmd('FileType', {
-  group = 'PluginConfig',
-  pattern = { "*.md" },
+vim.api.nvim_create_autocmd("FileType", {
+  group = "PluginConfig",
+  pattern = { "markdown" },
   callback = function()
-    require('plenary')
-    require('render-markdown').setup({})
-    require('obsidian').setup({
+    require("plenary")
+    require("render-markdown").setup({})
+    require("obsidian").setup({
       workspaces = {
         { name = "work", path = "~/work/worknote" },
       },
